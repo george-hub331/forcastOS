@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.memfork/
+data/
+*.log
+.DS_Store
+
+# MemForks — never commit private keys
+.memfork/credentials.json
+.memfork/*.local.json

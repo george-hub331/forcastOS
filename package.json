@@ -1,0 +1,30 @@
+{
+  "name": "forecastos",
+  "version": "0.1.0",
+  "description": "Prediction markets with version-controlled agent memory via MemForks",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "start": "tsx src/index.ts",
+    "bootstrap": "tsx src/scripts/bootstrap.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.72",
+    "@memfork/core": "^0.1.11",
+    "@memfork/vercel-ai": "^0.1.1",
+    "ai": "^6.0.207",
+    "dotenv": "^17.4.2",
+    "grammy": "^1.44.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
