@@ -40,7 +40,6 @@ npm run bootstrap
 npm run dev
 ```
 
-Create a bot via [@BotFather](https://t.me/BotFather) and paste the token into `.env`.
 
 ## Commands
 
