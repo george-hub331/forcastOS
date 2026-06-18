@@ -8,6 +8,8 @@ export interface TrackedMarket {
   chatId: number;
   yesHead: string;
   noHead: string;
+  yesConfidence?: number;
+  noConfidence?: number;
   createdAt: number;
   lastPrice?: { yes: number; no: number; ts: number };
   /** Demo override — set via /resolve before /postmortem */

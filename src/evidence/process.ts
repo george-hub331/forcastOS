@@ -1,12 +1,12 @@
 import { getMemForksClient } from "../memfork/client.js";
-import {
-  branchPath,
-  thesisForkName,
-} from "../memfork/branches.js";
+import { branchPath } from "../memfork/branches.js";
 import { classifyEvidence } from "../ai/classifier.js";
 import type { TrackedMarket } from "../store/sessions.js";
-import { updateMarket } from "../store/sessions.js";
 import type { Evidence, EvidenceNotifyFn } from "./types.js";
+import {
+  confirmThesisWithConfidence,
+  forkThesisWithConfidence,
+} from "./thesis-update.js";
 
 export async function processEvidence(
   market: TrackedMarket,
@@ -50,37 +50,51 @@ export async function processEvidence(
     return "Logged as noise — no thesis change.";
   }
 
+  const evidenceFacts = [
+    evidence.summary,
+    ...(evidence.source ? [`Source: ${evidence.source}`] : []),
+  ];
+
   if (verdict.kind === "confirms") {
     await client.commit(branchPath(market.id, "sources/news"), {
-      facts: [
-        evidence.summary,
-        ...(evidence.source ? [`Source: ${evidence.source}`] : []),
-      ],
+      facts: evidenceFacts,
       message: `Confirming evidence: ${evidence.headline}`,
     });
-    return `Evidence confirms ${verdict.side.toUpperCase()} thesis.`;
+
+    const { confidence, rationale } = await confirmThesisWithConfidence(
+      market,
+      verdict.side,
+      evidence.summary,
+      [`Confirming evidence: ${evidence.headline}`],
+      `Confirming evidence: ${evidence.headline}`,
+    );
+
+    return (
+      `Evidence confirms ${verdict.side.toUpperCase()} thesis.\n` +
+      `Updated confidence: ${confidence}% — ${rationale}`
+    );
   }
 
-  // changes-view → fork, never overwrite
   const side = verdict.side;
-  const currentHead = side === "yes" ? yesHead : noHead;
-  const forkName = thesisForkName(market.id, side);
+  const confidenceKind =
+    verdict.reason.toLowerCase().includes("weaken") ? "weaken" : "fork";
 
-  await client.branch(forkName, { from: currentHead });
-  await client.commit(forkName, {
-    facts: [
+  const { confidence, rationale } = await forkThesisWithConfidence(
+    market,
+    side,
+    evidence.summary,
+    [
       `${side.toUpperCase()} thesis changed: ${verdict.reason}`,
       `Triggering evidence: ${evidence.summary}`,
       ...(evidence.source ? [`Source: ${evidence.source}`] : []),
     ],
-    message: `View change: ${verdict.reason}`,
-  });
+    `View change: ${verdict.reason}`,
+    confidenceKind,
+  );
 
-  const patch =
-    side === "yes" ? { yesHead: forkName } : { noHead: forkName };
-  updateMarket(market.id, market.chatId, patch);
-
-  const msg = `${side.toUpperCase()} thesis forked: ${verdict.reason}`;
+  const msg =
+    `🔀 ${side.toUpperCase()} thesis forked: ${verdict.reason}\n` +
+    `Updated confidence: ${confidence}% — ${rationale}`;
   await notify(market.chatId, msg);
   return msg;
 }

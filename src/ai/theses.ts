@@ -4,6 +4,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { getMemForksClient } from "../memfork/client.js";
 import { branchPath, CALIBRATION_BRANCH } from "../memfork/branches.js";
+import { formatConfidence } from "../memfork/confidence.js";
 import type { MarketInfo } from "../markets/provider.js";
 
 const thesisSchema = z.object({
@@ -52,11 +53,11 @@ export async function generateInitialTheses(
 
   const yes = [
     ...object.yesFacts,
-    `Confidence: ${object.yesConfidence}%`,
+    formatConfidence(object.yesConfidence),
   ];
   const no = [
     ...object.noFacts,
-    `Confidence: ${object.noConfidence}%`,
+    formatConfidence(object.noConfidence),
   ];
 
   return {

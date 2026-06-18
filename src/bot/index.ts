@@ -1,4 +1,5 @@
 import { Bot } from "grammy";
+import { replyWithError } from "./errors.js";
 import { handleTrack } from "./commands/track.js";
 import { handleThesis } from "./commands/thesis.js";
 import { handleEvidence } from "./commands/evidence.js";
@@ -82,8 +83,9 @@ export function createBot(token: string): Bot {
     await handleRecallCalibration(ctx);
   });
 
-  bot.catch((err) => {
+  bot.catch(async (err) => {
     console.error("[bot] error:", err);
+    await replyWithError(err.ctx, err.error);
   });
 
   return bot;

@@ -45,6 +45,8 @@ export async function handleTrack(ctx: Context, marketRef: string): Promise<void
     chatId: chatIdFrom(ctx),
     yesHead,
     noHead,
+    yesConfidence: theses.yesConfidence,
+    noConfidence: theses.noConfidence,
     createdAt: Date.now(),
   };
 
