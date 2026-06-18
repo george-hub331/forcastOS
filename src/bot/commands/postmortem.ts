@@ -3,6 +3,7 @@ import { recallFacts } from "../../memfork/client.js";
 import {
   branchPath,
   CALIBRATION_BRANCH,
+  isBranchExistsError,
   lessonBranch,
 } from "../../memfork/branches.js";
 import { extractPostmortemLesson } from "../../ai/postmortem.js";
@@ -65,10 +66,7 @@ export async function handlePostmortem(ctx: BotContext): Promise<void> {
   try {
     await client.branch(lessonBr, { from: winnerHead });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    if (!msg.toLowerCase().includes("exist") && !msg.toLowerCase().includes("already")) {
-      throw err;
-    }
+    if (!isBranchExistsError(err)) throw err;
   }
 
   await client.commit(lessonBr, {

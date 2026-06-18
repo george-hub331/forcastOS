@@ -27,15 +27,23 @@ export function lessonBranch(marketId: string): string {
   return `${marketBase(marketId)}/lesson`;
 }
 
+export function isBranchExistsError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  const lower = msg.toLowerCase();
+  return (
+    lower.includes("e_branch_exists") ||
+    /},\s*7\)/.test(msg) ||
+    lower.includes("exist") ||
+    lower.includes("already")
+  );
+}
+
 export async function ensureCalibrationBranch(): Promise<void> {
   const client = await getMemForksClient();
   try {
     await client.branch(CALIBRATION_BRANCH, { from: "main" });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    if (!msg.toLowerCase().includes("exist") && !msg.toLowerCase().includes("already")) {
-      throw err;
-    }
+    if (!isBranchExistsError(err)) throw err;
   }
 }
 
@@ -50,8 +58,7 @@ export async function createMarketSubtree(marketId: string): Promise<string[]> {
       await client.branch(name, { from: CALIBRATION_BRANCH });
       created.push(name);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.toLowerCase().includes("exist") || msg.toLowerCase().includes("already")) {
+      if (isBranchExistsError(err)) {
         created.push(name);
         continue;
       }
