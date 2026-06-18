@@ -84,7 +84,6 @@ export function createBot(token: string): Bot {
   });
 
   bot.catch(async (err) => {
-    console.error("[bot] error:", err);
     await replyWithError(err.ctx, err.error);
   });
 

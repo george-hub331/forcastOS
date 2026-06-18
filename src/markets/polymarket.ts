@@ -24,7 +24,6 @@ const GAMMA_BASE = "https://gamma-api.polymarket.com";
 function parseRef(ref: string): { slug?: string; conditionId?: string; id?: string } {
   const trimmed = ref.trim();
 
-  // Full URL: polymarket.com/event/... or /market/...
   const urlMatch = trimmed.match(
     /polymarket\.com\/(?:event|market)\/([a-zA-Z0-9-]+)/i,
   );
@@ -32,12 +31,10 @@ function parseRef(ref: string): { slug?: string; conditionId?: string; id?: stri
     return { slug: urlMatch[1] };
   }
 
-  // 0x condition id
   if (trimmed.startsWith("0x") && trimmed.length > 10) {
     return { conditionId: trimmed };
   }
 
-  // Numeric gamma id
   if (/^\d+$/.test(trimmed)) {
     return { id: trimmed };
   }
@@ -77,9 +74,7 @@ function parsePrices(m: GammaMarket): MarketPrice {
     if (noIdx >= 0 && prices[noIdx] != null) no = Number(prices[noIdx]);
     if (yesIdx < 0 && prices[0] != null) yes = Number(prices[0]);
     if (noIdx < 0 && prices[1] != null) no = Number(prices[1]);
-  } catch {
-    // keep defaults
-  }
+  } catch {}
   return { yes, no, ts: Date.now() };
 }
 
@@ -99,9 +94,7 @@ function parseResolution(m: GammaMarket): MarketResolution {
         if (winner === "yes") return { resolved: true, outcome: "YES" };
         if (winner === "no") return { resolved: true, outcome: "NO" };
       }
-    } catch {
-      // fall through
-    }
+    } catch {}
     return { resolved: true };
   }
 

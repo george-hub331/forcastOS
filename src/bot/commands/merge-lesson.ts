@@ -1,5 +1,6 @@
 import { getMemForksClient } from "../../memfork/client.js";
 import { CALIBRATION_BRANCH } from "../../memfork/branches.js";
+import { safeMerge } from "../../memfork/merge.js";
 import type { Context } from "grammy";
 
 export async function handleMergeLesson(
@@ -14,7 +15,7 @@ export async function handleMergeLesson(
   await ctx.reply("Merging lesson into calibration/main…");
 
   const client = await getMemForksClient();
-  const { mergedCount, blobId } = await client.merge(sourceBranch, CALIBRATION_BRANCH, {
+  const { mergedCount, blobId } = await safeMerge(client, sourceBranch, CALIBRATION_BRANCH, {
     recallQueries: [
       "validated reasoning lessons and calibration patterns",
       "source reliability scores",

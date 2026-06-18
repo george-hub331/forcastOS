@@ -12,14 +12,13 @@ export interface TrackedMarket {
   noConfidence?: number;
   createdAt: number;
   lastPrice?: { yes: number; no: number; ts: number };
-  /** Demo override — set via /resolve before /postmortem */
   pendingOutcome?: "YES" | "NO";
   resolved?: { outcome: "YES" | "NO"; at: number; demo?: boolean };
 }
 
 interface SessionStore {
   markets: TrackedMarket[];
-  activeMarketId: Record<string, string>; // chatId -> marketId
+  activeMarketId: Record<string, string>;
 }
 
 const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "../../data");

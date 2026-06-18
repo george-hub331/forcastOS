@@ -1,5 +1,6 @@
 import { getMemForksClient } from "../../memfork/client.js";
 import { recallFacts } from "../../memfork/client.js";
+import { safeMerge } from "../../memfork/merge.js";
 import {
   branchPath,
   CALIBRATION_BRANCH,
@@ -80,7 +81,7 @@ export async function handlePostmortem(ctx: Context): Promise<void> {
     message: `Postmortem lesson for market ${market.id}`,
   });
 
-  const { mergedCount, blobId } = await client.merge(lessonBr, CALIBRATION_BRANCH, {
+  const { mergedCount, blobId } = await safeMerge(client, lessonBr, CALIBRATION_BRANCH, {
     recallQueries: [
       "validated reasoning lessons and calibration patterns",
       "source reliability scores",

@@ -24,7 +24,6 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("[forecastos] ensuring calibration/main…");
   await ensureCalibrationBranch();
 
   const bot = createBot(token);
@@ -33,13 +32,10 @@ async function main() {
     await bot.api.sendMessage(chatId, message);
   });
 
-  console.log("[forecastos] starting Telegram bot…");
-  await bot.start({
-    onStart: () => console.log("[forecastos] bot is running"),
-  });
+  await bot.start();
 }
 
 main().catch((err) => {
-  console.error("[forecastos] fatal:", err);
+  console.error(err);
   process.exit(1);
 });

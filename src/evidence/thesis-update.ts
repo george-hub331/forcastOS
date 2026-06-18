@@ -14,7 +14,6 @@ export interface ForkThesisResult {
   rationale: string;
 }
 
-/** Fork thesis branch, commit view change + revised confidence. */
 export async function forkThesisWithConfidence(
   market: TrackedMarket,
   side: "yes" | "no",
@@ -55,7 +54,6 @@ export async function forkThesisWithConfidence(
   return { forkName, confidence, rationale };
 }
 
-/** Append confirming evidence + revised confidence on current head (no fork). */
 export async function confirmThesisWithConfidence(
   market: TrackedMarket,
   side: "yes" | "no",

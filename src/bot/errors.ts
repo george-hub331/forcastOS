@@ -15,9 +15,5 @@ export function formatUserErrorMessage(error: unknown): string {
 
 export async function replyWithError(ctx: Context, error: unknown): Promise<void> {
   const text = formatUserErrorMessage(error);
-  try {
-    await ctx.reply(`${text}`);
-  } catch (replyErr) {
-    console.error("[bot] failed to send error reply:", replyErr);
-  }
+  await ctx.reply(`${text}`);
 }

@@ -9,17 +9,11 @@ export function startEvidencePoller(_notify: EvidenceNotifyFn): void {
   const intervalMs = Number(process.env.EVIDENCE_POLL_MS ?? 180_000);
 
   setInterval(async () => {
-    try {
-      const markets = getAllMarkets().filter((m) => !m.resolved);
-      for (const market of markets) {
-        await pollMarket(market);
-      }
-    } catch (err) {
-      console.error("[poller] error:", err);
+    const markets = getAllMarkets().filter((m) => !m.resolved);
+    for (const market of markets) {
+      await pollMarket(market).catch(() => {});
     }
   }, intervalMs);
-
-  console.log(`[poller] started (interval ${intervalMs}ms)`);
 }
 
 export function registerMarketPoller(market: { chatId: number; id: string }): void {
@@ -31,7 +25,7 @@ export function registerMarketPoller(market: { chatId: number; id: string }): vo
     const m = getAllMarkets().find(
       (x) => x.chatId === market.chatId && x.id === market.id && !x.resolved,
     );
-    if (m) pollMarket(m).catch((err) => console.error(`[poller] ${key}:`, err));
+    if (m) pollMarket(m).catch(() => {});
   }, intervalMs);
   pollTimers.set(key, timer);
 }

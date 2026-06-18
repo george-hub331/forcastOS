@@ -7,7 +7,6 @@ export function parseConfidence(text: string): number | null {
   return Number.isFinite(n) ? Math.round(n) : null;
 }
 
-/** First confidence value found in recall result order. */
 export function firstConfidence(facts: string[]): number | null {
   for (const text of facts) {
     const n = parseConfidence(text);
@@ -16,7 +15,6 @@ export function firstConfidence(facts: string[]): number | null {
   return null;
 }
 
-/** @deprecated Use session-stored confidence; fallback only. */
 export function latestConfidence(facts: string[]): number | null {
   return firstConfidence(facts);
 }
