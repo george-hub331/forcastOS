@@ -1,8 +1,8 @@
 import { recallFacts } from "../../memfork/client.js";
 import { CALIBRATION_BRANCH } from "../../memfork/branches.js";
-import type { BotContext } from "../context.js";
+import type { Context } from "grammy";
 
-export async function handleRecallCalibration(ctx: BotContext): Promise<void> {
+export async function handleRecallCalibration(ctx: Context): Promise<void> {
   const facts = await recallFacts(
     "validated reasoning lessons calibration patterns source reliability",
     CALIBRATION_BRANCH,

@@ -1,12 +1,13 @@
 import { processEvidence } from "../../evidence/process.js";
 import { getActiveMarket } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
 export async function handleInject(
-  ctx: BotContext,
+  ctx: Context,
   text: string,
 ): Promise<void> {
-  const market = getActiveMarket(ctx.chatId);
+  const market = getActiveMarket(chatIdFrom(ctx));
   if (!market) {
     await ctx.reply("No active market. Use /track first.");
     return;

@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { withMemForks } from "@memfork/vercel-ai";
-import { generateObject, type LanguageModel } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 import { getMemForksClient } from "../memfork/client.js";
 import { branchPath, CALIBRATION_BRANCH } from "../memfork/branches.js";
@@ -31,11 +31,11 @@ export async function generateInitialTheses(
       ? `\nPrior calibration lessons:\n${calibrationFacts.map((f) => String(f.text)).join("\n")}`
       : "";
 
-  const model = withMemForks(openai("gpt-4o-mini") as never, {
+  const model = withMemForks(openai("gpt-4o-mini"), {
     branch: CALIBRATION_BRANCH,
     recallLimit: 3,
     autoCommit: false,
-  }) as unknown as LanguageModel;
+  });
 
   const { object } = await generateObject({
     model,

@@ -1,11 +1,12 @@
 import { getActiveMarket, updateMarket } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
 export async function handleResolve(
-  ctx: BotContext,
+  ctx: Context,
   outcomeArg: string,
 ): Promise<void> {
-  const market = getActiveMarket(ctx.chatId);
+  const market = getActiveMarket(chatIdFrom(ctx));
   if (!market) {
     await ctx.reply("No active market.");
     return;
@@ -17,7 +18,7 @@ export async function handleResolve(
     return;
   }
 
-  updateMarket(market.id, market.chatId, {
+  updateMarket(market.id, chatIdFrom(ctx), {
     pendingOutcome: arg,
   });
 

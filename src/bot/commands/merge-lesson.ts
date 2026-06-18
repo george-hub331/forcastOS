@@ -1,9 +1,9 @@
 import { getMemForksClient } from "../../memfork/client.js";
 import { CALIBRATION_BRANCH } from "../../memfork/branches.js";
-import type { BotContext } from "../context.js";
+import type { Context } from "grammy";
 
 export async function handleMergeLesson(
-  ctx: BotContext,
+  ctx: Context,
   sourceBranch: string,
 ): Promise<void> {
   if (!sourceBranch?.trim()) {

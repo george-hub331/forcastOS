@@ -1,9 +1,10 @@
 import { polymarketProvider } from "../../markets/polymarket.js";
 import { getAllMarketsForChat } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
-export async function handleStatus(ctx: BotContext): Promise<void> {
-  const markets = getAllMarketsForChat(ctx.chatId);
+export async function handleStatus(ctx: Context): Promise<void> {
+  const markets = getAllMarketsForChat(chatIdFrom(ctx));
 
   if (markets.length === 0) {
     await ctx.reply("No tracked markets. Use /track <polymarket-url>.");

@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { withMemForks } from "@memfork/vercel-ai";
-import { generateObject, type LanguageModel } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 import { CALIBRATION_BRANCH } from "../memfork/branches.js";
 
@@ -20,11 +20,11 @@ export async function extractPostmortemLesson(
   noThesis: string,
   newsEvidence: string,
 ): Promise<PostmortemResult> {
-  const model = withMemForks(openai("gpt-4o-mini") as never, {
+  const model = withMemForks(openai("gpt-4o-mini"), {
     branch: CALIBRATION_BRANCH,
     recallLimit: 3,
     autoCommit: false,
-  }) as unknown as LanguageModel;
+  });
 
   const { object } = await generateObject({
     model,

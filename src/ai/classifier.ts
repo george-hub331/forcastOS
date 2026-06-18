@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { withMemForks } from "@memfork/vercel-ai";
-import { generateObject, type LanguageModel } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 
 export const verdictSchema = z.object({
@@ -16,11 +16,11 @@ export async function classifyEvidence(
   evidenceSummary: string,
   marketQuestion: string,
 ): Promise<EvidenceVerdict> {
-  const model = withMemForks(openai("gpt-4o-mini") as never, {
+  const model = withMemForks(openai("gpt-4o-mini"), {
     branch: thesisHead,
     recallLimit: 5,
     autoCommit: false,
-  }) as unknown as LanguageModel;
+  });
 
   const { object } = await generateObject({
     model,

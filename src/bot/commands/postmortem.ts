@@ -9,10 +9,11 @@ import {
 import { extractPostmortemLesson } from "../../ai/postmortem.js";
 import { polymarketProvider } from "../../markets/polymarket.js";
 import { getActiveMarket, updateMarket } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
-export async function handlePostmortem(ctx: BotContext): Promise<void> {
-  const market = getActiveMarket(ctx.chatId);
+export async function handlePostmortem(ctx: Context): Promise<void> {
+  const market = getActiveMarket(chatIdFrom(ctx));
   if (!market) {
     await ctx.reply("No active market.");
     return;
@@ -86,7 +87,7 @@ export async function handlePostmortem(ctx: BotContext): Promise<void> {
     ],
   });
 
-  updateMarket(market.id, market.chatId, {
+  updateMarket(market.id, chatIdFrom(ctx), {
     resolved: { outcome, at: Date.now(), demo },
     pendingOutcome: undefined,
   });

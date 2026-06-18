@@ -1,14 +1,15 @@
 import { getMemForksClient } from "../../memfork/client.js";
 import { thesisForkName } from "../../memfork/branches.js";
 import { getActiveMarket, updateMarket } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
 export async function handleFork(
-  ctx: BotContext,
+  ctx: Context,
   sideArg: string,
   reason: string,
 ): Promise<void> {
-  const market = getActiveMarket(ctx.chatId);
+  const market = getActiveMarket(chatIdFrom(ctx));
   if (!market) {
     await ctx.reply("No active market.");
     return;
@@ -36,7 +37,7 @@ export async function handleFork(
     message: `Manual fork: ${reason}`,
   });
 
-  updateMarket(market.id, market.chatId, {
+  updateMarket(market.id, chatIdFrom(ctx), {
     ...(side === "yes" ? { yesHead: forkName } : { noHead: forkName }),
   });
 

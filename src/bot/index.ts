@@ -1,5 +1,4 @@
 import { Bot } from "grammy";
-import { chatIdFrom } from "./context.js";
 import { handleTrack } from "./commands/track.js";
 import { handleThesis } from "./commands/thesis.js";
 import { handleEvidence } from "./commands/evidence.js";
@@ -34,54 +33,53 @@ export function createBot(token: string): Bot {
   });
 
   bot.command("track", async (ctx) => {
-    const ref = ctx.match?.trim() ?? "";
-    await handleTrack({ ...ctx, chatId: chatIdFrom(ctx) }, ref);
+    await handleTrack(ctx, ctx.match?.trim() ?? "");
   });
 
   bot.command("thesis", async (ctx) => {
-    await handleThesis({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleThesis(ctx);
   });
 
   bot.command("evidence", async (ctx) => {
-    await handleEvidence({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleEvidence(ctx);
   });
 
   bot.command("risk", async (ctx) => {
-    await handleRisk({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleRisk(ctx);
   });
 
   bot.command("status", async (ctx) => {
-    await handleStatus({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleStatus(ctx);
   });
 
   bot.command("fork", async (ctx) => {
     const match = (ctx.match ?? "").trim();
     const [side, ...rest] = match.split(/\s+/);
-    await handleFork({ ...ctx, chatId: chatIdFrom(ctx) }, side, rest.join(" "));
+    await handleFork(ctx, side, rest.join(" "));
   });
 
   bot.command("merge", async (ctx) => {
-    await handleMergeLesson({ ...ctx, chatId: chatIdFrom(ctx) }, ctx.match?.trim() ?? "");
+    await handleMergeLesson(ctx, ctx.match?.trim() ?? "");
   });
 
   bot.command("postmortem", async (ctx) => {
-    await handlePostmortem({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handlePostmortem(ctx);
   });
 
   bot.command("inject", async (ctx) => {
-    await handleInject({ ...ctx, chatId: chatIdFrom(ctx) }, ctx.match?.trim() ?? "");
+    await handleInject(ctx, ctx.match?.trim() ?? "");
   });
 
   bot.command("resolve", async (ctx) => {
-    await handleResolve({ ...ctx, chatId: chatIdFrom(ctx) }, ctx.match?.trim() ?? "");
+    await handleResolve(ctx, ctx.match?.trim() ?? "");
   });
 
   bot.command("recall_calibration", async (ctx) => {
-    await handleRecallCalibration({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleRecallCalibration(ctx);
   });
 
   bot.command("recall-calibration", async (ctx) => {
-    await handleRecallCalibration({ ...ctx, chatId: chatIdFrom(ctx) });
+    await handleRecallCalibration(ctx);
   });
 
   bot.catch((err) => {

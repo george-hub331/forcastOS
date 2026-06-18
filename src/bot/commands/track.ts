@@ -10,9 +10,10 @@ import {
 } from "../../memfork/branches.js";
 import { commitTheses, generateInitialTheses } from "../../ai/theses.js";
 import { addMarket } from "../../store/sessions.js";
-import type { BotContext } from "../context.js";
+import { chatIdFrom } from "../context.js";
+import type { Context } from "grammy";
 
-export async function handleTrack(ctx: BotContext, marketRef: string): Promise<void> {
+export async function handleTrack(ctx: Context, marketRef: string): Promise<void> {
   if (!marketRef?.trim()) {
     await ctx.reply("Usage: /track <polymarket-url-or-slug>");
     return;
@@ -41,7 +42,7 @@ export async function handleTrack(ctx: BotContext, marketRef: string): Promise<v
   const tracked = {
     id: market.id,
     question: market.question,
-    chatId: ctx.chatId,
+    chatId: chatIdFrom(ctx),
     yesHead,
     noHead,
     createdAt: Date.now(),
