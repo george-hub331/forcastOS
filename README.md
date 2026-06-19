@@ -29,7 +29,7 @@ Telegram bot built on [MemForks](https://github.com/memforks-dev/memforks). Each
 # 1. MemForks credentials (one-time, interactive — pick mainnet)
 npm install -g @memfork/cli
 memfork init --quick
-memfork doctor --env   # copy printed MEMFORK_* vars
+memfork doctor --env   # copy printed MEMFORK_* vars into .env
 
 # 2. Install & configure
 cd forcastOS
@@ -44,6 +44,19 @@ npm run bootstrap
 npm run dev
 ```
 
+### Moving to mainnet
+
+Wipe prior MemForks state (testnet or old tree), then re-run quick init and select **mainnet**:
+
+```bash
+rm -f .memfork/config.json
+rm -f ~/.memfork/credentials.json
+
+memfork init --quick          # choose mainnet (gas sponsored)
+memfork doctor --env          # update .env with new MEMFORK_* values
+npm run bootstrap
+```
+
 ### Environment variables
 
 | Variable | Required | Description |
@@ -55,7 +68,8 @@ npm run dev
 | `MEMFORK_MEMWAL_ACCOUNT` | yes | MemWal account ID |
 | `MEMFORK_MEMWAL_KEY` | yes | MemWal delegate key |
 | `MEMFORK_NETWORK` | no | Default `mainnet` |
-| `MEMFORK_RELAYER_URL` | no | Default `https://relayer.memory.walrus.xyz` |
+| `MEMFORK_RELAYER_URL` | no | Default `https://relayer.memory.walrus.xyz` (mainnet) |
+| `MEMFORK_SPONSOR_URL` | no | Set by `memfork init --quick` on mainnet (in `.memfork/config.json`); override if needed |
 | `EVIDENCE_POLL_MS` | no | Price poller interval (default `180000` = 3 min) |
 
 ### npm scripts
