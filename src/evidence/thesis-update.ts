@@ -1,6 +1,7 @@
 import { getMemForksClient } from "../memfork/client.js";
 import { formatConfidence } from "../memfork/confidence.js";
 import { thesisForkName } from "../memfork/branches.js";
+import { pacedBranch } from "../memfork/pacing.js";
 import {
   reviseConfidence,
   type ConfidenceUpdateKind,
@@ -26,7 +27,7 @@ export async function forkThesisWithConfidence(
   const currentHead = side === "yes" ? market.yesHead : market.noHead;
   const forkName = thesisForkName(market.id, side);
 
-  await client.branch(forkName, { from: currentHead });
+  await pacedBranch(client, forkName, { from: currentHead });
 
   const { confidence, rationale } = await reviseConfidence({
     thesisHead: forkName,

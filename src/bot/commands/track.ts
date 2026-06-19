@@ -19,7 +19,9 @@ export async function handleTrack(ctx: Context, marketRef: string): Promise<void
     return;
   }
 
-  await ctx.reply("Fetching market and creating branch tree…");
+  await ctx.reply(
+    "Fetching market and forking branch tree… (first track may take ~1 min on mainnet)",
+  );
 
   await ensureCalibrationBranch();
   const market = await polymarketProvider.getMarket(marketRef);

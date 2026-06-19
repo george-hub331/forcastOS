@@ -7,6 +7,7 @@ import {
   isBranchExistsError,
   lessonBranch,
 } from "../../memfork/branches.js";
+import { pacedBranch } from "../../memfork/pacing.js";
 import { extractPostmortemLesson } from "../../ai/postmortem.js";
 import { polymarketProvider } from "../../markets/polymarket.js";
 import { getActiveMarket, updateMarket } from "../../store/sessions.js";
@@ -66,7 +67,7 @@ export async function handlePostmortem(ctx: Context): Promise<void> {
   const lessonBr = lessonBranch(market.id);
 
   try {
-    await client.branch(lessonBr, { from: winnerHead });
+    await pacedBranch(client, lessonBr, { from: winnerHead });
   } catch (err) {
     if (!isBranchExistsError(err)) throw err;
   }

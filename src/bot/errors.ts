@@ -1,4 +1,5 @@
 import type { Context } from "grammy";
+import { isSponsorRateLimitError } from "../memfork/pacing.js";
 
 export function formatUserErrorMessage(error: unknown): string {
   const msg = error instanceof Error ? error.message : String(error);
@@ -8,6 +9,9 @@ export function formatUserErrorMessage(error: unknown): string {
   }
   if (msg.startsWith("Polymarket API error:")) {
     return "Polymarket is temporarily unavailable. Please try again in a moment.";
+  }
+  if (isSponsorRateLimitError(error)) {
+    return "MemForks sponsor rate limit hit — wait about a minute and try /track again.";
   }
 
   return "Something went wrong. Please try again.";

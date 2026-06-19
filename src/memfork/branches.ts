@@ -1,4 +1,5 @@
 import { getMemForksClient } from "./client.js";
+import { pacedBranch } from "./pacing.js";
 
 export const CALIBRATION_BRANCH = "calibration/main";
 
@@ -41,7 +42,7 @@ export function isBranchExistsError(err: unknown): boolean {
 export async function ensureCalibrationBranch(): Promise<void> {
   const client = await getMemForksClient();
   try {
-    await client.branch(CALIBRATION_BRANCH, { from: "main" });
+    await pacedBranch(client, CALIBRATION_BRANCH, { from: "main" });
   } catch (err) {
     if (!isBranchExistsError(err)) throw err;
   }
@@ -55,7 +56,7 @@ export async function createMarketSubtree(marketId: string): Promise<string[]> {
   for (const sub of SUB_BRANCHES) {
     const name = `${base}/${sub}`;
     try {
-      await client.branch(name, { from: CALIBRATION_BRANCH });
+      await pacedBranch(client, name, { from: CALIBRATION_BRANCH });
       created.push(name);
     } catch (err) {
       if (isBranchExistsError(err)) {
